@@ -6,5 +6,11 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 
-	<context:component-scan base-package="com.quick.board"></context:component-scan>
+	<context:component-scan base-package="com.quick"></context:component-scan>
+	
+	<bean id="userService" class="com.quick.user.service.UserServiceImpl">
+		<property name="userDAOJdbc" ref="userDAOJdbc"/>
+	</bean>
+	
+	<bean id="userDAOJdbc" class="com.quick.user.repository.UserDAOJdbc"></bean>
 </beans>

@@ -1,4 +1,4 @@
-package com.quick.board.repository;
+package com.quick.user.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,22 +6,19 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
-import com.quick.board.domain.Board;
 import com.quick.common.JdbcManager;
+import com.quick.user.domain.User;
 
-@Repository("boardDAOJdbc")
-public class BoardDAOJdbc implements BoardDAO {
+public class UserDAOJdbc implements UserDAO {
 
-	private final String BOARD_INSERT = "insert into board(board_seq,title,writer,content) values(board_seq.nextval,?,?,?)";
-	private final String BOARD_UPDATE = "update board set title=?, content=? where board_seq=?";
-	private final String BOARD_DELETE = "delete board where board_seq=?";
-	private final String BOARD_GET = "select * from board where board_seq=?";
-	private final String BOARD_LIST = "select * from board order by board_seq desc";
+	private final String USER_INSERT = "insert into users(id,pwd,name,role) values(?,?,?,?)";
+	private final String USER_UPDATE = "update users set pwd=?, name=? where id=? and pwd=?";
+	private final String USER_DELETE = "delete users where id=? and pwd=?";
+	private final String USER_GET = "select * from users where id=? and pwd=?";
+	private final String USER_LIST = "select * from users order by id asc";
 
 	@Override
-	public void insertBoard(Board board) {
+	public void insertUser(User user) {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -31,10 +28,11 @@ public class BoardDAOJdbc implements BoardDAO {
 
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(BOARD_INSERT);
-			pstmt.setString(1, board.getTitle());
-			pstmt.setString(2, board.getWriter());
-			pstmt.setString(3, board.getContent());
+			pstmt = con.prepareStatement(USER_INSERT);
+			pstmt.setString(1, user.getId());
+			pstmt.setString(2, user.getPwd());
+			pstmt.setString(3, user.getName());
+			pstmt.setString(4, user.getRole());
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -42,12 +40,11 @@ public class BoardDAOJdbc implements BoardDAO {
 		} finally {
 			JdbcManager.close(con, pstmt);
 		}
-
 	}
 
 	@Override
-	public void updateBoard(Board board) {
-		// TODO Auto-generated method stub.
+	public void updateUser(User user) {
+		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -56,10 +53,11 @@ public class BoardDAOJdbc implements BoardDAO {
 
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(BOARD_UPDATE);
-			pstmt.setString(1, board.getTitle());
-			pstmt.setString(2, board.getContent());
-			pstmt.setInt(3, board.getBoard_seq());
+			pstmt = con.prepareStatement(USER_UPDATE);		
+			pstmt.setString(1, user.getPwd());
+			pstmt.setString(2, user.getName());
+			pstmt.setString(3, user.getId());			//ID & PWD 일치 할 경우 정보 변경(?)
+			pstmt.setString(4, user.getPwd());
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -67,10 +65,11 @@ public class BoardDAOJdbc implements BoardDAO {
 		} finally {
 			JdbcManager.close(con, pstmt);
 		}
+
 	}
 
 	@Override
-	public void deleteBoard(int board_seq) {
+	public void deleteUser(String id, String pwd) {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -78,12 +77,11 @@ public class BoardDAOJdbc implements BoardDAO {
 
 		System.out.println("==>JDBC delete 기능 처리");
 
-		Board board = new Board();
-
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(BOARD_DELETE);
-			pstmt.setInt(1, board.getBoard_seq());
+			pstmt = con.prepareStatement(USER_UPDATE);		
+			pstmt.setString(1, id);			//ID & PWD 일치 할 경우 정보 변경(?)
+			pstmt.setString(2, pwd);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -91,32 +89,34 @@ public class BoardDAOJdbc implements BoardDAO {
 		} finally {
 			JdbcManager.close(con, pstmt);
 		}
+
 	}
 
 	@Override
-	public Board getBoard(int board_seq) {
+	public User getUser(String id, String pwd) {
 		// TODO Auto-generated method stub
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
 		System.out.println("==>JDBC selectOne 기능 처리");
 
-		Board board = new Board();
+		User user = new User();
 
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(BOARD_GET);
-			pstmt.setInt(1, board_seq);
+			pstmt = con.prepareStatement(USER_GET);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pwd);
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				board.setBoard_seq(rs.getInt("board_seq"));
-				board.setTitle(rs.getString("title"));
-				board.setWriter(rs.getString("writer"));
-				board.setContent(rs.getString("content"));
-				board.setRegdate(rs.getDate("regdate"));
-				board.setCnt(rs.getInt("cnt"));
+				user.setId(rs.getString("id"));
+				user.setPwd(rs.getString("pwd"));
+				user.setName(rs.getString("name"));
+				user.setRole(rs.getString("role"));
+				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -124,12 +124,12 @@ public class BoardDAOJdbc implements BoardDAO {
 		} finally {
 			JdbcManager.close(con, pstmt, rs);
 		}
-		return board;
 
+		return user;
 	}
 
 	@Override
-	public List<Board> getBoardList() {
+	public List<User> getUserList() {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -137,21 +137,20 @@ public class BoardDAOJdbc implements BoardDAO {
 
 		System.out.println("==>JDBC selectAll 기능 처리");
 
-		List<Board> boardList = new ArrayList<Board>();
+		List<User> userList = new ArrayList<User>();
 
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(BOARD_LIST);
+			pstmt = con.prepareStatement(USER_LIST);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Board board = new Board();
-				board.setBoard_seq(rs.getInt("board_seq"));
-				board.setTitle(rs.getString("title"));
-				board.setWriter(rs.getString("writer"));
-				board.setContent(rs.getString("content"));
-				board.setRegdate(rs.getDate("regdate"));
-				board.setCnt(rs.getInt("cnt"));
-				boardList.add(board);
+				User user = new User();
+				user.setId(rs.getString("id"));
+				user.setPwd(rs.getString("pwd"));
+				user.setName(rs.getString("name"));
+				user.setRole(rs.getString("role"));
+
+				userList.add(user);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -159,7 +158,7 @@ public class BoardDAOJdbc implements BoardDAO {
 		} finally {
 			JdbcManager.close(con, pstmt, rs);
 		}
-		return boardList;
+		return userList;
 	}
 
 }

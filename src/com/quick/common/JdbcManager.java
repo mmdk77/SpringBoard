@@ -1,4 +1,4 @@
-package com.quick.board.common;
+package com.quick.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
