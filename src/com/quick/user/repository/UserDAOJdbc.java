@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.quick.common.JdbcManager;
 import com.quick.user.domain.User;
 
+@Repository("userDAO")
 public class UserDAOJdbc implements UserDAO {
 
 	private final String USER_INSERT = "insert into users(id,pwd,name,role) values(?,?,?,?)";
@@ -22,7 +25,6 @@ public class UserDAOJdbc implements UserDAO {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 
 		System.out.println("==>JDBC insert 기능 처리");
 
@@ -47,7 +49,6 @@ public class UserDAOJdbc implements UserDAO {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 
 		System.out.println("==>JDBC update 기능 처리");
 
@@ -73,14 +74,13 @@ public class UserDAOJdbc implements UserDAO {
 		// TODO Auto-generated method stub
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 
 		System.out.println("==>JDBC delete 기능 처리");
 
 		try {
 			con = JdbcManager.getConnetion();
-			pstmt = con.prepareStatement(USER_UPDATE);		
-			pstmt.setString(1, id);			//ID & PWD 일치 할 경우 정보 변경(?)
+			pstmt = con.prepareStatement(USER_DELETE);		
+			pstmt.setString(1, id);			
 			pstmt.setString(2, pwd);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
