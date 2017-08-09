@@ -17,19 +17,26 @@ public class BoardSericeClient {
 		BoardService boardService = (BoardService) container.getBean("boardService");
 		
 		
-	/*	
-	 	Board board = new Board();
+		
+	/* 	Board board = new Board();
 	 	board.setTitle("두번쨰 Spring + JDBC");
 		board.setWriter("이선용");
 		board.setContent("실수로 날아갔어!!");
 		boardService.insertBoard(board);*/
 		
 		List<Board> boardList = boardService.getBoardList();
+		System.out.println(boardList);
 		for(Board board:boardList){
 			System.out.println("==>"+board.toString());
 			
 		}
 		
+		
+		/*Board board = new Board();
+		board = boardService.getBoard(1);
+		System.out.println("==>"+board.toString());*/
+		
+		container.close();
 
 	}
 

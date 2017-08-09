@@ -13,7 +13,6 @@ import com.quick.board.repository.BoardDAOJdbc;
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
-	@Qualifier("boardDAOJdbc")
 	private BoardDAOJdbc boardDAO;
 	
 	@Override
