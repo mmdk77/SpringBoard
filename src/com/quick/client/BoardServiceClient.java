@@ -1,4 +1,4 @@
-package com.quick.common;
+package com.quick.client;
 
 import java.util.List;
 

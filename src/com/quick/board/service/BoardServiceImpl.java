@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.quick.board.domain.Board;
 import com.quick.board.repository.BoardDAOJdbc;
+import com.quick.common.LogAdvice;
 
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private BoardDAOJdbc boardDAO;
-	
+
 	@Override
 	public void insertBoard(Board board) {
 		// TODO Auto-generated method stub

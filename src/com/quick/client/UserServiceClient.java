@@ -1,4 +1,4 @@
-package com.quick.common;
+package com.quick.client;
 
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
